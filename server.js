@@ -21,7 +21,7 @@ const app = express()
 
 //Rutas de proyecto
 app.use('/api/v1/bootcamps' , bootcampRoutes)
-app.use('a/api/v1/courses' , courseRoutes)
+app.use('/api/v1/courses' , courseRoutes)
 
 //rutas de aplicacion
 app.get('/' , (request, response )=>{

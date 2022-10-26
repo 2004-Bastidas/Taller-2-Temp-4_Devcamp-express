@@ -1,10 +1,10 @@
 const sequelize = require('./seq')
 const colors = require('colors')
-const { Datatypes } = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 //crear instancia de el modelo User
 const UserModel = require('../models/user')
-const User = UserModel (sequelize, Datatypes)
+const User = UserModel (sequelize, DataTypes)
  
 //definir funcon de conexion a la base
 // de datos
@@ -20,7 +20,7 @@ const connectDB = async ()=> {
               password: "1234" 
             });
         console.log("Jane's auto-generated ID:", jane.id);
-        
+
     } catch (error) {
         console.log(error)       
     }

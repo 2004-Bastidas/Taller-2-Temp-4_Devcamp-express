@@ -1,80 +1,188 @@
 //Dependencias
-//el objeto de conexion:
+//Al objeto de conexion 
 const sequelize = require('../config/seq')
-//DataTypes de Sequelize
-const { DataTypes } = require('sequelize')
-//el modelo
-const UserModel = require('../models/user')
 
-//crear la entidad
-const User = UserModel(sequelize , DataTypes)
-//listar todos los user
-exports.getAllUsers = async (req , res)=>{
-    //traer los usuarios
-    const users = await User.findAll();
-    //response con los datos
-    res
-        .status(200)
-        .json({
-            "success": true,
-            "data" : users
-        })
-}
+//DataTypes de sequelize 
+const {DataTypes, ValidationError} = require ('sequelize')
 
-//Listar user por id
-exports.getSingleUser = async (req , res)=>{
-    // LLAMAR ID = ${req.params.id}
-    //traer el usuario
-    const singleUser = await User.findByPk(req.params.id);
-    //resopnse con los datos
-    res
-        .status(200)
-        .json({
-            "success": true,
-            "data" : singleUser
-        })
-}
+//Modelo 
+const UserModel = require ('../models/user')
 
-//Actualizar user por id
-exports.updateUser = async (req , res)=>{
-    await User.update( req.body, {
-        where: {
-          id: req.params.id
-        }
-    });
-    const singleUser = await User.findByPk(req.params.id);
-    res
-        .status(200)
-        .json({
-            "success": true,
-            "data" : singleUser
-        })
-}
+//Crear la entidad 
+const User = UserModel(sequelize, DataTypes)
 
-//Borrar user por id
-exports.deleteUser = async (req , res)=>{
-    const singleUser = await User.findByPk(req.params.id);
-    await User.destroy({
-        where: {
-          id: req.params.id
-        }
-      });
-    res
-        .status(200)
-        .json({
-            "success": true,
-            "data" : singleUser
-        })
-}
-
-//crear nuevo user
-exports.createUser = async (req , res)=>{
-
-        const newUser = await User.create(req.body)
+//Las rutas de users 
+// Listar todos los users 
+exports.getAllUsers = async (req, res)=>{
+    try {
+            //Traer los usuarios 
+        const users = await User.findAll();
+            //Response con los datos 
         res
+            .status(200)
+            .json({
+                "success": true,
+                "data": users
+            })
+    } catch (error) {
+        res
+            .status(400)
+            .json({
+                "succes":   false,
+                "error": "Error de conexion con el servidor"
+            })
+    }
+    
+}
+
+// Listar users por id 
+exports.getSingleUser = async (req, res)=>{
+    try {
+        const SingleUser = await User.findByPk(req.params.id);
+    //console.log(req.params.id)
+        if(SingleUser){
+            res
         .status(200)
         .json({
             "success": true,
-            "data" : newUser
-        })
+            "data": SingleUser
+            })
+        }else{
+            res
+        .status(200)
+        .json({
+            "succes":   false,
+            "error": "Error el usuario no existe"
+            })    
+        }
+    } catch (error) {
+        res
+        .status(400)
+        .json({
+            "succes":   false,
+            "error": "Error de conexion con el servidor"
+            })
+    }
+    
 }
+
+
+//Actualizar el users 
+exports.updateUser = async (req, res)=>{
+    //console.log(req.params.id)
+    try {
+        const SingleUser = await User.findByPk(req.params.id);
+        if (!SingleUser) {
+            res
+            .status(400)
+            .json({
+                "succes":   false,
+                "error": "Error el usuario no existe"
+                })  
+            
+        } else {
+            await User.update(req.body,  {
+                where: {
+                 id: req.params.id
+                }
+              });
+             
+            res
+                .status(200)
+                .json({
+                    "success": true,
+                    "data": SingleUser
+                })
+        }
+    } catch (error) {
+        res
+        .status(400)
+        .json({
+            "succes":   false,
+            "error": "Error de conexion con el servidor"
+            })
+    }
+}
+
+
+//Borrar users 
+exports.deleteUser = async (req, res)=>{
+    //console.log(req.params.id)
+    const SingleUser = await User.findByPk(req.params.id);
+    try {
+        if(SingleUser){
+            await User.destroy({
+                where: {
+                    id: req.params.id
+                }
+              });
+            
+            res
+                .status(200)
+                .json({
+                    "success": true,
+                    "data": SingleUser
+                })
+        }else{
+            res
+        .status(200)
+        .json({
+            "succes":   false,
+            "error": "Error el usuario no existe"
+            })  
+        }
+    } catch (error) {
+        res
+        .status(400)
+        .json({
+            "succes":   false,
+            "error": "Error de conexion con el servidor"
+            })
+    }
+}
+
+// Crear nuevo users 
+exports.createUser = async (req, res)=>{
+    try {
+        const SingleUser = await User.findByPk(req.params.id);
+        const newUser = await User.create(req.body);
+        if (newUser) {
+            res
+            .status(200)
+            .json({
+                "success": true,
+                "data": newUser
+            })
+            
+        } else if(SingleUser){
+            res
+            .status(400)
+            .json({
+                "succes":   false,
+                "error": "Error el usuario ya existe"
+                })  
+        }
+    } catch (error) {
+        if(error instanceof ValidationError){
+            //Recorrer el arreglo de errores
+            //map
+            const errores = error.errors.map((elemento)=> elemento.message )
+            res
+                .status(400)
+                .json({
+                    "succes":   false,
+                    "error": errores
+                })
+        }else{
+            res
+                .status(400)
+                .json({
+                    "succes":   false,
+                    "error": "Error de conexion con el servidor"
+                })
+        }
+    }
+    
+} 
+
+

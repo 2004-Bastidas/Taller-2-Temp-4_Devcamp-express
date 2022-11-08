@@ -2,32 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Bootcamps', {
+    await queryInterface.createTable('Courses', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        allowNull: false,
+      title: {
         type: Sequelize.STRING
       },
       description: {
-        allowNull: false,
         type: Sequelize.STRING
       },
-      averageCost: {
-        allowNull: false,
+      weeks: {
+        type: Sequelize.INTEGER
+      },
+      enroll_cost: {
         type: Sequelize.FLOAT
       },
-      averageRating: {
-        allowNull: false,
-        type: Sequelize.DATE
+      minimum_skill: {
+        type: Sequelize.STRING
       }
+     
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Bootcamps');
+    await queryInterface.dropTable('Courses');
   }
 };

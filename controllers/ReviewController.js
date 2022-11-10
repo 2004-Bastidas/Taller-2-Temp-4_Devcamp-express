@@ -5,54 +5,53 @@ const sequelize = require('../config/seq')
 //DataTypes de sequelize 
 const {DataTypes, ValidationError} = require ('sequelize')
 
-//Modelo 
-const UserModel = require ('../models/user')
+//Modelo
+const ReviewsModel = require('../models/reviews')
 
-//Crear la entidad 
-const User = UserModel(sequelize, DataTypes)
+//Crear la entidad
+const Review = ReviewsModel(sequelize, DataTypes)
 
-//Las rutas de users 
-// Listar todos los users 
-exports.getAllUsers = async (req, res)=>{
+//Las rutas de Reviews 
+// Listar todos los Reviews 
+exports.getAllReviews = async (req, res)=>{
     try {
-            //Traer los usuarios 
-        const users = await User.findAll();
+            //Traer los Reviews 
+        const reviews = await Review.findAll();
             //Response con los datos 
         res
             .status(200)
             .json({
                 "success": true,
-                "data": users
+                "data": reviews
             })
     } catch (error) {
         res
             .status(400)
             .json({
                 "succes":   false,
-                "error": "Error de conexion con el servidor"
+                "error": error
             })
     }
-    
 }
 
-// Listar users por id 
-exports.getSingleUser = async (req, res)=>{
+// Listar Reviews por id
+exports.getSingleReviews = async (req, res)=>{
     try {
-        const SingleUser = await User.findByPk(req.params.id);
+        const SingleReviews = await Review.findByPk(req.params.id);
     //console.log(req.params.id)
-        if(SingleUser){
+        if(SingleReviews){
             res
         .status(200)
         .json({
             "success": true,
-            "data": SingleUser
+            "data": SingleReviews
             })
         }else{
             res
         .status(200)
         .json({
             "succes":   false,
-            "error": "Error el usuario no existe"
+            "error": "Error el Review no existe"
             })    
         }
     } catch (error) {
@@ -63,25 +62,23 @@ exports.getSingleUser = async (req, res)=>{
             "error": "Error de conexion con el servidor"
             })
     }
-    
 }
 
-
-//Actualizar el users 
-exports.updateUser = async (req, res)=>{
-    //console.log(req.params.id)
-    try {
-        const SingleUser = await User.findByPk(req.params.id);
-        if (!SingleUser) {
+//Actualizar el  Review
+exports.updateReviews = async (req, res)=>{
+     //console.log(req.params.id)
+     try {
+        const SingleReviews = await Review.findByPk(req.params.id);
+        if (!SingleReviews) {
             res
             .status(400)
             .json({
                 "succes":   false,
-                "error": "Error el usuario no existe"
+                "error": "Error el review no existe"
                 })  
             
         } else {
-            await User.update(req.body,  {
+            await Review.update(req.body,  {
                 where: {
                  id: req.params.id
                 }
@@ -91,7 +88,7 @@ exports.updateUser = async (req, res)=>{
                 .status(200)
                 .json({
                     "success": true,
-                    "data": SingleUser
+                    "data": SingleReviews
                 })
         }
     } catch (error) {
@@ -99,19 +96,18 @@ exports.updateUser = async (req, res)=>{
         .status(400)
         .json({
             "succes":   false,
-            "error": "Error de conexion con el servidor"
+            "error": error
             })
     }
 }
 
- 
-//Borrar users 
-exports.deleteUser = async (req, res)=>{
+//Borrar Reviews
+exports.deleteReviews = async (req, res)=>{
     //console.log(req.params.id)
-    const SingleUser = await User.findByPk(req.params.id);
+    const SingleReviews = await Review.findByPk(req.params.id);
     try {
-        if(SingleUser){
-            await User.destroy({
+        if(SingleReviews){
+            await Review.destroy({
                 where: {
                     id: req.params.id
                 }
@@ -121,14 +117,14 @@ exports.deleteUser = async (req, res)=>{
                 .status(200)
                 .json({
                     "success": true,
-                    "data": SingleUser
+                    "data": SingleReviews
                 })
         }else{
             res
         .status(200)
         .json({
             "succes":   false,
-            "error": "Error el usuario no existe"
+            "error": "Error el review no existe"
             })  
         }
     } catch (error) {
@@ -141,25 +137,25 @@ exports.deleteUser = async (req, res)=>{
     }
 }
 
-// Crear nuevo users 
-exports.createUser = async (req, res)=>{
+//Crear nuevo reviews
+exports.createReviews = async (req, res)=>{
     try {
-        const SingleUser = await User.findByPk(req.params.id);
-        const newUser = await User.create(req.body);
-        if (newUser) {
+        const SingleReviews = await Review.findByPk(req.params.id);
+        const newReviews = await Review.create(req.body);
+        if (newReviews) {
             res
             .status(200)
             .json({
                 "success": true,
-                "data": newUser
+                "data": newReviews
             })
             
-        } else if(SingleUser){
+        } else if(SingleReviews){
             res
             .status(400)
             .json({
                 "succes":   false,
-                "error": "Error el usuario ya existe"
+                "error": "Error el review ya existe"
                 })  
         }
     } catch (error) {
@@ -183,6 +179,4 @@ exports.createUser = async (req, res)=>{
         }
     }
 
-} 
-
-
+}

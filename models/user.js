@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
+    /** 
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
@@ -44,16 +44,26 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate:{
         isEmail: {
           args: true,
           msg:'El email no es valido'
         },
+        notNull : {
+          args: true,
+          msg: 'El email debe estar presente'
+        },
       },
     },
     password:{
       type:DataTypes.STRING,
+      allowNull: false,
       validate:{
+        notNull : {
+          args: true,
+          msg: 'El password debe estar presente'
+        },
         len: {
           args: [5,10],
           msg: "password minimo 5 y maximo 10 caracteres"

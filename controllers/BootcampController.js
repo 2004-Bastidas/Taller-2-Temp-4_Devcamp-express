@@ -5,24 +5,24 @@ const sequelize = require('../config/seq')
 //DataTypes de sequelize 
 const {DataTypes, ValidationError} = require ('sequelize')
 
-//Modelo 
-const UserModel = require ('../models/user')
+//Modelo
+const BootcampModel = require('../models/bootcamps')
 
-//Crear la entidad 
-const User = UserModel(sequelize, DataTypes)
+//Crear la entidad
+const Bootcamp = BootcampModel(sequelize, DataTypes)
 
-//Las rutas de users 
-// Listar todos los users 
-exports.getAllUsers = async (req, res)=>{
+//Las rutas de bootcamp 
+// Listar todos los bootcamp 
+exports.getAllBootcamps = async (req, res)=>{
     try {
-            //Traer los usuarios 
-        const users = await User.findAll();
+            //Traer los cursos 
+        const bootscamps = await Bootcamp.findAll();
             //Response con los datos 
         res
             .status(200)
             .json({
                 "success": true,
-                "data": users
+                "data": bootscamps
             })
     } catch (error) {
         res
@@ -35,24 +35,24 @@ exports.getAllUsers = async (req, res)=>{
     
 }
 
-// Listar users por id 
-exports.getSingleUser = async (req, res)=>{
+// Listar bootcamp por id 
+exports.getSingleBootcamp = async (req, res)=>{
     try {
-        const SingleUser = await User.findByPk(req.params.id);
+        const SingleBootcamp = await Bootcamp.findByPk(req.params.id);
     //console.log(req.params.id)
-        if(SingleUser){
+        if(SingleBootcamp){
             res
         .status(200)
         .json({
             "success": true,
-            "data": SingleUser
+            "data": SingleBootcamp
             })
         }else{
             res
         .status(200)
         .json({
             "succes":   false,
-            "error": "Error el usuario no existe"
+            "error": "Error el curso no existe"
             })    
         }
     } catch (error) {
@@ -60,19 +60,18 @@ exports.getSingleUser = async (req, res)=>{
         .status(400)
         .json({
             "succes":   false,
-            "error": "Error de conexion con el servidor"
+            "error": error
             })
     }
     
 }
 
-
-//Actualizar el users 
-exports.updateUser = async (req, res)=>{
+//Actualizar el course 
+exports.updateBootcamp = async (req, res)=>{
     //console.log(req.params.id)
     try {
-        const SingleUser = await User.findByPk(req.params.id);
-        if (!SingleUser) {
+        const SingleBootcamp = await Bootcamp.findByPk(req.params.id);
+        if (!SingleBootcamp) {
             res
             .status(400)
             .json({
@@ -81,7 +80,7 @@ exports.updateUser = async (req, res)=>{
                 })  
             
         } else {
-            await User.update(req.body,  {
+            await Bootcamp.update(req.body,  {
                 where: {
                  id: req.params.id
                 }
@@ -91,7 +90,7 @@ exports.updateUser = async (req, res)=>{
                 .status(200)
                 .json({
                     "success": true,
-                    "data": SingleUser
+                    "data": SingleBootcamp
                 })
         }
     } catch (error) {
@@ -104,14 +103,13 @@ exports.updateUser = async (req, res)=>{
     }
 }
 
- 
 //Borrar users 
-exports.deleteUser = async (req, res)=>{
+exports.deleteBootcamp = async (req, res)=>{
     //console.log(req.params.id)
-    const SingleUser = await User.findByPk(req.params.id);
+    const SingleBootcamp = await Bootcamp.findByPk(req.params.id);
     try {
-        if(SingleUser){
-            await User.destroy({
+        if(SingleBootcamp){
+            await Bootcamp.destroy({
                 where: {
                     id: req.params.id
                 }
@@ -121,14 +119,14 @@ exports.deleteUser = async (req, res)=>{
                 .status(200)
                 .json({
                     "success": true,
-                    "data": SingleUser
+                    "data": SingleBootcamp
                 })
         }else{
             res
         .status(200)
         .json({
             "succes":   false,
-            "error": "Error el usuario no existe"
+            "error": "Error el bootcamp no existe"
             })  
         }
     } catch (error) {
@@ -141,25 +139,25 @@ exports.deleteUser = async (req, res)=>{
     }
 }
 
-// Crear nuevo users 
-exports.createUser = async (req, res)=>{
+// Crear nuevo course 
+exports.createBootcamp = async (req, res)=>{
     try {
-        const SingleUser = await User.findByPk(req.params.id);
-        const newUser = await User.create(req.body);
-        if (newUser) {
+        const SingleBootcamp = await Bootcamp.findByPk(req.params.id);
+        const newBootcamp = await Bootcamp.create(req.body);
+        if (newBootcamp) {
             res
             .status(200)
             .json({
                 "success": true,
-                "data": newUser
+                "data": newBootcamp
             })
             
-        } else if(SingleUser){
+        } else if(SingleBootcamp){
             res
             .status(400)
             .json({
                 "succes":   false,
-                "error": "Error el usuario ya existe"
+                "error": "Error el bootcamp ya existe"
                 })  
         }
     } catch (error) {
@@ -184,5 +182,3 @@ exports.createUser = async (req, res)=>{
     }
 
 } 
-
-

@@ -5,24 +5,24 @@ const sequelize = require('../config/seq')
 //DataTypes de sequelize 
 const {DataTypes, ValidationError} = require ('sequelize')
 
-//Modelo 
-const UserModel = require ('../models/user')
+//Modelo
+const CourseModel = require('../models/courses')
 
-//Crear la entidad 
-const User = UserModel(sequelize, DataTypes)
+//Crear la entidad
+const Course = CourseModel(sequelize, DataTypes)
 
-//Las rutas de users 
-// Listar todos los users 
-exports.getAllUsers = async (req, res)=>{
+//Las rutas de courses 
+// Listar todos los courses 
+exports.getAllCourses = async (req, res)=>{
     try {
-            //Traer los usuarios 
-        const users = await User.findAll();
+            //Traer los cursos 
+        const courses = await Course.findAll();
             //Response con los datos 
         res
             .status(200)
             .json({
                 "success": true,
-                "data": users
+                "data": courses
             })
     } catch (error) {
         res
@@ -36,23 +36,23 @@ exports.getAllUsers = async (req, res)=>{
 }
 
 // Listar users por id 
-exports.getSingleUser = async (req, res)=>{
+exports.getSingleCourse = async (req, res)=>{
     try {
-        const SingleUser = await User.findByPk(req.params.id);
+        const SingleCourse = await Course.findByPk(req.params.id);
     //console.log(req.params.id)
-        if(SingleUser){
+        if(SingleCourse){
             res
         .status(200)
         .json({
             "success": true,
-            "data": SingleUser
+            "data": SingleCourse
             })
         }else{
             res
         .status(200)
         .json({
             "succes":   false,
-            "error": "Error el usuario no existe"
+            "error": "Error el curso no existe"
             })    
         }
     } catch (error) {
@@ -60,19 +60,19 @@ exports.getSingleUser = async (req, res)=>{
         .status(400)
         .json({
             "succes":   false,
-            "error": "Error de conexion con el servidor"
+            "error": error
             })
     }
     
 }
 
 
-//Actualizar el users 
-exports.updateUser = async (req, res)=>{
+//Actualizar el course 
+exports.updateCourse = async (req, res)=>{
     //console.log(req.params.id)
     try {
-        const SingleUser = await User.findByPk(req.params.id);
-        if (!SingleUser) {
+        const SingleCourse = await Course.findByPk(req.params.id);
+        if (!SingleCourse) {
             res
             .status(400)
             .json({
@@ -81,7 +81,7 @@ exports.updateUser = async (req, res)=>{
                 })  
             
         } else {
-            await User.update(req.body,  {
+            await Course.update(req.body,  {
                 where: {
                  id: req.params.id
                 }
@@ -91,7 +91,7 @@ exports.updateUser = async (req, res)=>{
                 .status(200)
                 .json({
                     "success": true,
-                    "data": SingleUser
+                    "data": SingleCourse
                 })
         }
     } catch (error) {
@@ -99,19 +99,18 @@ exports.updateUser = async (req, res)=>{
         .status(400)
         .json({
             "succes":   false,
-            "error": "Error de conexion con el servidor"
+            "error": error
             })
     }
 }
 
- 
 //Borrar users 
-exports.deleteUser = async (req, res)=>{
+exports.deleteCourse = async (req, res)=>{
     //console.log(req.params.id)
-    const SingleUser = await User.findByPk(req.params.id);
+    const SingleCourse = await Course.findByPk(req.params.id);
     try {
-        if(SingleUser){
-            await User.destroy({
+        if(SingleCourse){
+            await Course.destroy({
                 where: {
                     id: req.params.id
                 }
@@ -121,14 +120,14 @@ exports.deleteUser = async (req, res)=>{
                 .status(200)
                 .json({
                     "success": true,
-                    "data": SingleUser
+                    "data": SingleCourse
                 })
         }else{
             res
         .status(200)
         .json({
             "succes":   false,
-            "error": "Error el usuario no existe"
+            "error": "Error el curso no existe"
             })  
         }
     } catch (error) {
@@ -141,20 +140,20 @@ exports.deleteUser = async (req, res)=>{
     }
 }
 
-// Crear nuevo users 
-exports.createUser = async (req, res)=>{
+// Crear nuevo course 
+exports.createCourse = async (req, res)=>{
     try {
-        const SingleUser = await User.findByPk(req.params.id);
-        const newUser = await User.create(req.body);
-        if (newUser) {
+        const SingleCourse = await Course.findByPk(req.params.id);
+        const newCourse = await Course.create(req.body);
+        if (newCourse) {
             res
             .status(200)
             .json({
                 "success": true,
-                "data": newUser
+                "data": newCourse
             })
             
-        } else if(SingleUser){
+        } else if(SingleCourse){
             res
             .status(400)
             .json({
@@ -184,5 +183,3 @@ exports.createUser = async (req, res)=>{
     }
 
 } 
-
-
